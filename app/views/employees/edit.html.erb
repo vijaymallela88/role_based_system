@@ -1,0 +1,54 @@
+<h1>Editing User</h1>
+
+<%= form_for :user, :url => {:controller => "employees", :action => "update"} , method: :patch do |f| %>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name, autofocus: true, autocomplete: "name" , :required => true%>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.email_field :email, autofocus: true, autocomplete: "email" , :required => true%>
+  </div>
+
+  <div class="field">
+    <%= f.label :password %>
+    <% if @minimum_password_length %>
+    <em>(<%= @minimum_password_length %> characters minimum)</em>
+    <% end %><br />
+    <%= f.password_field :password, autocomplete: "new-password" , :required => true%>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation %><br />
+    <%= f.password_field :password_confirmation, autocomplete: "new-password" , :required => true%>
+  </div>
+
+  <div class="field">
+    <%= label_tag :user_type %><br />
+    <%= select_tag :user_type, options_for_select(@user_types, :selected => @assigned_roles.id) , :prompt => "Select" , :required => true%>
+  </div>
+  <div class="field">
+    <%= label_tag :access_type %><br />
+    <ul>
+      <% @access_types.each do |type| %>
+          <li>
+          	<%if @access_type.include?(type[0])%>
+            <%= check_box_tag 'access_type[]', type[0], true -%>
+            <%= h type[0] -%>
+            <%else%>
+            <%= check_box_tag 'access_type[]', type[0] -%>
+            <%= h type[0] -%>
+            <%end%>
+          </li>
+      <% end %>
+    </ul>
+  </div>
+ <br>
+  <div class="actions">
+    <%= f.submit "Save" %>
+  </div>
+<% end %>
+<%= link_to 'Back', employees_path %>
+
+<%= link_to 'Show', employee_path(@user) %> |
+<%= link_to 'Back', employees_path %>

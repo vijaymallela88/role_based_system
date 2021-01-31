@@ -1,0 +1,21 @@
+<%= form_for @role, :html => {id: "role_id"} do |f| %>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name, autofocus: true, autocomplete: "name" , :required => true%>
+  </div>
+  
+
+  <div class="actions">
+    <%= f.submit "Save" %>
+  </div>
+<% end %>
+<%= link_to 'Back', roles_path %>
+
+<script type="text/javascript">
+	$("#role_id").validate({
+        rules: {
+        "role[name]": "required",
+        },
+    });
+
+</script>
