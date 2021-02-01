@@ -1,34 +1,28 @@
 class EmployeesController < ApplicationController
-	before_action :set_product, only: [:show, :edit, :update, :destroy]
+	before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_access_types, only: [:new, :edit, :create]
+  before_action :set_roles, only: [:new, :edit, :create]
 
   
   def index
-    @users = User.all[1..-1]
+    # @users = User.all[1..-1]
+    @users = UsersQuery.call(User.all, params)
   end
 
-  
   def show
   end
 
-  
   def new
     @user = User.new
-    @user_types = Role.all[1..-1].pluck(:name, :id)
-    @access_types = [["create"], ["update"], ["show"], ["delete"]]
   end
 
   def edit
     user_role = UserRole.find_by(:user_id => params[:id])
-    @user_types = Role.all[1..-1].pluck(:name, :id)
     @assigned_roles = Role.find user_role.role_id
-    @access_types = [["create"], ["update"], ["show"], ["delete"]]
     @access_type = JSON.parse(user_role.access_type)
   end
 
-  
   def create
-    @user_types = Role.all[1..-1].pluck(:name, :id)
-    @access_types = [["create"], ["update"], ["show"], ["delete"]]
     user_name = User.find_by(:name => params[:name], :email => params[:email])
     @user_id = UserRole.find_by(:user_id => user_name.id, :role_id => params[:user_type]) if user_name.present?
     if !@user_id.present?
@@ -51,7 +45,6 @@ class EmployeesController < ApplicationController
 
  
   def update
-
     user_role = UserRole.find_by(:user_id => params[:id])
     respond_to do |format|
       if @user.update(user_params)
@@ -75,13 +68,23 @@ class EmployeesController < ApplicationController
   end
 
   private
-    def set_product
-      @user = User.find(params[:id])
-    end
 
-    def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation)
-    end
+  def set_user
+    # @user = User.find(params[:id])
+    @user = UsersQuery.call(User.all, params)
+  end
+
+  def set_roles
+    @user_types = Role.all[1..-1].pluck(:name, :id)
+  end
+
+  def set_access_types
+    @access_types = [["create"], ["update"], ["show"], ["delete"]]
+  end
+
+  def user_params
+    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  end
     
 
 end

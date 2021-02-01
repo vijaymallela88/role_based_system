@@ -1,8 +1,20 @@
 <%= form_for :user, :url => {:controller => "employees", :action => "create"} do |f| %>
+
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div class="field">
     <%= f.label :name %><br />
     <%= f.text_field :name, autofocus: true, autocomplete: "name" , :required => true%>
   </div>
+
   <div class="field">
     <%= f.label :email %><br />
     <%= f.email_field :email, autofocus: true, autocomplete: "email" , :required => true%>
@@ -25,6 +37,7 @@
     <%= label_tag :user_type %><br />
     <%= select_tag :user_type, options_for_select(@user_types), :prompt => "Select" , :required => true%>
   </div>
+
   <div class="field">
     <%= label_tag :access_type %><br />
     <ul>
@@ -36,9 +49,11 @@
       <% end %>
     </ul>
   </div>
- <br>
+
+  <br>
   <div class="actions">
     <%= f.submit "Save" %>
   </div>
 <% end %>
+
 <%= link_to 'Back', employees_path %>

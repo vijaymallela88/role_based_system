@@ -1,10 +1,11 @@
 class RolesController < ApplicationController
   
-  before_action :set_product, only: [:show, :edit, :update, :destroy]
+  before_action :set_role, only: [:show, :edit, :update, :destroy]
 
   
   def index
-    @roles = Role.all[1..-1]
+    # @roles = Role.all[1..-1]
+    @roles = RolesQuery.call(Role.all, params)
   end
 
   def show
@@ -24,7 +25,7 @@ class RolesController < ApplicationController
 
     respond_to do |format|
       if @role.save
-        format.html { redirect_to @role, notice: 'Role was successfully created.' }
+        format.html { redirect_to roles_path, notice: 'Role was successfully created.' }
         format.json { render :show, status: :created, location: @role }
       else
         format.html { render :new }
@@ -33,12 +34,10 @@ class RolesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /products/1
-  # PATCH/PUT /products/1.json
   def update
     respond_to do |format|
       if @role.update(role_params)
-        format.html { redirect_to @role, notice: 'Role was successfully updated.' }
+        format.html { redirect_to roles_path, notice: 'Role was successfully updated.' }
         format.json { render :show, status: :ok, location: @role }
       else
         format.html { render :edit }
@@ -47,8 +46,6 @@ class RolesController < ApplicationController
     end
   end
 
-  # DELETE /products/1
-  # DELETE /products/1.json
   def destroy
     @role.destroy
     respond_to do |format|
@@ -58,12 +55,11 @@ class RolesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_product
-      @role = Role.find(params[:id])
+    def set_role
+      # @role = Role.find(params[:id])
+      @role = RolesQuery.call(Role.all, params)
     end
 
-    # Only allow a list of trusted parameters through.
     def role_params
       params.require(:role).permit(:name, :user_id)
     end

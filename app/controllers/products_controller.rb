@@ -3,7 +3,8 @@ class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
   def index
-    @products = Product.all
+    # @products = Product.all
+    @products = ProductsQuery.call(Product.all, params)
     @roles = Role.all
     # role = Role.find_by(:name => "Admin")
     user_role = UserRole.find_by(:user_id => current_user.id)
@@ -58,13 +59,14 @@ class ProductsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_product
-      @product = Product.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def product_params
-      params.require(:product).permit(:name, :price, :user_id)
-    end
+  def set_product
+    # @product = Product.find(params[:id])
+    @product = ProductsQuery.call(Product.all, params)
+  end
+
+  def product_params
+    params.require(:product).permit(:name, :price, :user_id)
+  end
+  
 end
